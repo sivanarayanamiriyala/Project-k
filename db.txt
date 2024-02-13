@@ -1,0 +1,185 @@
+create database KL;
+
+use KL;
+
+CREATE TABLE Employee (
+    empcode VARCHAR(30) PRIMARY KEY,
+    empname VARCHAR(30)
+);
+
+CREATE TABLE hourlydata8(empcode VARCHAR(30),machinecode VARCHAR(10),date DATE,shift INT,heatno VARCHAR(10),produced INT,passed INT,reject INT,
+lossno VARCHAR(10),lossinmin VARCHAR(10),FOREIGN KEY (empcode) REFERENCES Employee(empcode));
+
+
+
+
+
+CREATE TABLE hourlydata(empcode VARCHAR(30),machinecode VARCHAR(10),modelname varchar(20),operation varchar(20),date DATE,shift INT,hour INT,heatno VARCHAR(10),produced INT,passed INT,reject INT,
+lossno VARCHAR(10),lossinmin VARCHAR(10),FOREIGN KEY (empcode) REFERENCES Employee(empcode));
+
+
+
+		
+
+
+create table machine(machinecode varchar(10) primary key);
+
+create table duties(machinecode varchar(10),empcode varchar(30),date date,foreign key(machinecode) references machine(machinecode),shift INT,foreign key(empcode) references employee(empcode));
+
+
+
+SELECT
+    h1.empcode,
+    CASE WHEN ROW_NUMBER() OVER (PARTITION BY h1.empcode ORDER BY h1.date, h1.shift, h1.machinecode) = 1 THEN h1.machinecode ELSE NULL END AS machinecode,
+    h1.heatno AS heatno1, h1.produced AS produced1, h1.passed AS passed1, h1.reject AS reject1, h1.lossno AS lossno1, h1.lossinmin AS lossinmin1,
+    h2.heatno AS heatno2, h2.produced AS produced2, h2.passed AS passed2, h2.reject AS reject2, h2.lossno AS lossno2, h2.lossinmin AS lossinmin2,
+    h3.heatno AS heatno3, h3.produced AS produced3, h3.passed AS passed3, h3.reject AS reject3, h3.lossno AS lossno3, h3.lossinmin AS lossinmin3,
+    h4.heatno AS heatno4, h4.produced AS produced4, h4.passed AS passed4, h4.reject AS reject4, h4.lossno AS lossno4, h4.lossinmin AS lossinmin4,
+    h5.heatno AS heatno5, h5.produced AS produced5, h5.passed AS passed5, h5.reject AS reject5, h5.lossno AS lossno5, h5.lossinmin AS lossinmin5,
+    h6.heatno AS heatno6, h6.produced AS produced6, h6.passed AS passed6, h6.reject AS reject6, h6.lossno AS lossno6, h6.lossinmin AS lossinmin6,
+    h7.heatno AS heatno7, h7.produced AS produced7, h7.passed AS passed7, h7.reject AS reject7, h7.lossno AS lossno7, h7.lossinmin AS lossinmin7,
+    h8.heatno AS heatno8, h8.produced AS produced8, h8.passed AS passed8, h8.reject AS reject8, h8.lossno AS lossno8, h8.lossinmin AS lossinmin8
+FROM
+    hourlydata1 h1
+LEFT JOIN
+    hourlydata2 h2 ON h1.empcode = h2.empcode AND h1.shift = h2.shift AND h1.date = h2.date
+LEFT JOIN
+    hourlydata3 h3 ON h1.empcode = h3.empcode AND h1.shift = h3.shift AND h1.date = h3.date
+LEFT JOIN
+    hourlydata4 h4 ON h1.empcode = h4.empcode AND h1.shift = h4.shift AND h1.date = h4.date
+LEFT JOIN
+    hourlydata5 h5 ON h1.empcode = h5.empcode AND h1.shift = h5.shift AND h1.date = h5.date
+LEFT JOIN
+    hourlydata6 h6 ON h1.empcode = h6.empcode AND h1.shift = h6.shift AND h1.date = h6.date
+LEFT JOIN
+    hourlydata7 h7 ON h1.empcode = h7.empcode AND h1.shift = h7.shift AND h1.date = h7.date
+LEFT JOIN
+    hourlydata8 h8 ON h1.empcode = h8.empcode AND h1.shift = h8.shift AND h1.date = h8.date
+WHERE
+    h1.shift = %s AND h1.date = %s
+ORDER BY
+    h1.empcode, h1.date, h1.shift, h1.machinecode;
+
+
+
+schema
+
+date empcode shift heatno p pas rej lossno lossin min      2 3 4 5 6 7 8 
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT
+    empcode,
+    machinecode,
+    MAX(CASE WHEN hour = 1 THEN heatno END) AS heatno_1,
+    MAX(CASE WHEN hour = 1 THEN produced END) AS produced_1,
+    MAX(CASE WHEN hour = 1 THEN passed END) AS passed_1,
+    MAX(CASE WHEN hour = 1 THEN reject END) AS reject_1,
+    MAX(CASE WHEN hour = 1 THEN lossno END) AS lossno_1,
+    MAX(CASE WHEN hour = 1 THEN lossinmin END) AS lossinmin_1,
+
+
+    MAX(CASE WHEN hour = 2 THEN heatno END) AS heatno_2,
+    MAX(CASE WHEN hour = 2 THEN produced END) AS produced_2,
+    MAX(CASE WHEN hour = 2 THEN passed END) AS passed_2,
+    MAX(CASE WHEN hour = 2 THEN reject END) AS reject_2,
+    MAX(CASE WHEN hour = 2 THEN lossno END) AS lossno_2,
+    MAX(CASE WHEN hour = 2 THEN lossinmin END) AS lossinmin_2,
+
+    MAX(CASE WHEN hour = 3 THEN heatno END) AS heatno_3,
+    MAX(CASE WHEN hour = 3 THEN produced END) AS produced_3,
+    MAX(CASE WHEN hour = 3 THEN passed END) AS passed_3,
+    MAX(CASE WHEN hour = 3 THEN reject END) AS reject_3,
+    MAX(CASE WHEN hour = 3 THEN lossno END) AS lossno_3,
+    MAX(CASE WHEN hour = 3 THEN lossinmin END) AS lossinmin_3,
+
+
+    MAX(CASE WHEN hour = 4 THEN heatno END) AS heatno_4,
+    MAX(CASE WHEN hour = 4 THEN produced END) AS produced_4,
+    MAX(CASE WHEN hour = 4 THEN passed END) AS passed_4,
+    MAX(CASE WHEN hour = 4 THEN reject END) AS reject_4,
+    MAX(CASE WHEN hour = 4 THEN lossno END) AS lossno_4,
+    MAX(CASE WHEN hour = 4 THEN lossinmin END) AS lossinmin_4,
+
+
+    MAX(CASE WHEN hour = 5 THEN heatno END) AS heatno_5,
+    MAX(CASE WHEN hour = 5 THEN produced END) AS produced_5,
+    MAX(CASE WHEN hour = 5 THEN passed END) AS passed_5,
+    MAX(CASE WHEN hour = 5 THEN reject END) AS reject_5,
+    MAX(CASE WHEN hour = 5 THEN lossno END) AS lossno_5,
+    MAX(CASE WHEN hour = 5 THEN lossinmin END) AS lossinmin_5,
+
+
+    MAX(CASE WHEN hour = 6 THEN heatno END) AS heatno_6,
+    MAX(CASE WHEN hour = 6 THEN produced END) AS produced_6,
+    MAX(CASE WHEN hour = 6 THEN passed END) AS passed_6,
+    MAX(CASE WHEN hour = 6 THEN reject END) AS reject_6,
+    MAX(CASE WHEN hour = 6 THEN lossno END) AS lossno_6,
+    MAX(CASE WHEN hour = 6 THEN lossinmin END) AS lossinmin_6,
+
+    MAX(CASE WHEN hour = 7 THEN heatno END) AS heatno_7,
+    MAX(CASE WHEN hour = 7 THEN produced END) AS produced_7,
+    MAX(CASE WHEN hour = 7 THEN passed END) AS passed_7,
+    MAX(CASE WHEN hour = 7 THEN reject END) AS reject_7,
+    MAX(CASE WHEN hour = 7 THEN lossno END) AS lossno_7,
+    MAX(CASE WHEN hour = 7 THEN lossinmin END) AS lossinmin_7,
+
+    MAX(CASE WHEN hour = 8 THEN heatno END) AS heatno_8,
+    MAX(CASE WHEN hour = 8 THEN produced END) AS produced_8,
+    MAX(CASE WHEN hour = 8 THEN passed END) AS passed_8,
+    MAX(CASE WHEN hour = 8 THEN reject END) AS reject_8,
+    MAX(CASE WHEN hour = 8 THEN lossno END) AS lossno_8,
+    MAX(CASE WHEN hour = 8 THEN lossinmin END) AS lossinmin_8
+
+FROM hourlydata
+WHERE hour BETWEEN 1 AND 8
+    AND shift = 1
+    AND date = '2024-02-02'
+GROUP BY empcode, machinecode;
+
+
+
+
+
+
+
+create table losses(lossno varchar(10),description varchar(30));
+
+
+insert into losses values("A","Lunch time");
+
+
+SELECT employee.empcode
+FROM employee
+LEFT JOIN duties ON employee.empcode = duties.empcode AND duties.date = '2024-02-03'
+WHERE duties.empcode IS NULL;
+
+
+
+
+SELECT employee.empcode
+FROM employee
+LEFT JOIN duties ON employee.empcode = duties.empcode
+WHERE duties.empcode IS NULL;
+
+
+
+
+
+
+create table users(empcode varchar(30) primary key,username varchar(30) unique,name varchar(30),password varchar(30),designation varchar(30),supervisor varchar(30),isworking boolean default 1);
+
+
+
+
+

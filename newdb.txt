@@ -1,0 +1,58 @@
+create database KL;
+
+use KL;
+
+create table users(empcode varchar(30) primary key,username varchar(30) unique,name varchar(30),password varchar(30),designation varchar(30),supervisor varchar(30) default "NO",isworking boolean default 1);
+
+insert into users(empcode,username,name,password,designation) values('E0001','sivanarayana','Siva Narayana','12345','manager');
+
+
+SELECT t1.empcode, t2.empcode,t2.name,t2.users  FROM users t1 JOIN users t2 ON t1.supervisor = t2.name WHERE t1.supervisor = %s;
+
+create table machine(machinecode varchar(10) primary key);
+
+
+
+create table assignedduties(empcode varchar(30) unique,machinecode varchar(30),shift int,FOREIGN KEY(empcode) REFERENCES users(empcode),Foreign key(machinecode) references machine(machinecode));
+
+insert into assignedduties values('E0005','2000',1)
+
+INSERT INTO assignedduties(empcode,machinecode,shift) VALUES('E003',"2000", 1) ON DUPLICATE KEY UPDATE machinecode="2001",shift=2;  
+
+
+SELECT * FROM hourlydata WHERE  shift =1 AND date ='2024-02-07' AND empcode IN (SELECT empcode FROM users WHERE supervisor IN (SELECT supervisor FROM users WHERE empcode ='E0004'))
+
+
+
+CREATE TABLE hourlydata(empcode VARCHAR(30),empname varchar(30),machinecode VARCHAR(10),modelname varchar(20),assempcode varchar(20),operation varchar(20),date DATE,shift INT,hourlytype varchar(3),hour INT,heatno VARCHAR(10),produced INT,passed INT,reject INT,materialrejectiontype varchar(20),materialrejectioncount int,
+processrejectiontype varchar(20),processrejctioncount int,hasloss varchar(5),lossno VARCHAR(10),lossinmin VARCHAR(10),FOREIGN KEY(empcode) REFERENCES users(empcode),Foreign key(machinecode) references machine(machinecode));
+
+
+create table dailydata(empcode varchar(30),empname varchar(30),machinecode VARCHAR(10),supervisor varchar(30),modelname varchar(20),assempcode varchar(20),operation varchar(20),date DATE,shift INT,hourlytype varchar(3),produced INT,passed INT,reject INT,materialrejectioncount int,processrejectioncount int,lossinmin VARCHAR(10),FOREIGN KEY(empcode) REFERENCES users(empcode),Foreign key(machinecode) references machine(machinecode));
+
+
+
+
+CREATE TABLE dailydata (
+    empcode VARCHAR(30),
+    empname VARCHAR(30),
+    machinecode VARCHAR(10),
+    supervisor VARCHAR(30),
+    modelname VARCHAR(20),
+    operation VARCHAR(20),
+    date DATE,
+    shift INT,
+    produced INT,
+    passed INT,
+    reject INT,
+    materialrejectioncount INT,
+    processrejectioncount INT,
+    lossinmin VARCHAR(10),
+    PRIMARY KEY (empcode, date), -- Composite primary key
+    FOREIGN KEY (empcode) REFERENCES users(empcode),
+    FOREIGN KEY (machinecode) REFERENCES machine(machinecode)
+);
+
+
+
+create table managercredentials(shift int,hours int);
